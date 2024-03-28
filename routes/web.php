@@ -21,9 +21,6 @@ Route::get('/', function () {
 
 Route::get('/registeruser', [PerpusController::class, 'registeruser'])->name('registeruser');
 Route::post('/registeruser', [PerpusController::class, 'RegisUser'])->name('register.user');
-Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
-Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowedadm');
-Route::put('/update-role/{id}', [PerpusController::class, 'updateRole'])->name('update.role');
 
 
 
@@ -36,6 +33,7 @@ Route::post('/login', [PerpusController::class, 'auth'])->name('login.auth');
 
 Route::get('/dashboard', [PerpusController::class, 'dashboard'])->name('dashboard');
 
+Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
 
 Route::get('/book', [PerpusController::class, 'book'])->name('book');
 Route::post('/book/category', [PerpusController::class, 'inputCategory'])->name('input.category');
@@ -48,11 +46,22 @@ Route::post('simpanreview', [PerpusController::class, 'simpanreview'])->name('re
 Route::post('simpanreview/update/{id}', [PerpusController::class, 'simpanreview'])->name('update.review');
 
 
+Route::delete('/deletecateg/{id}', [PerpusController::class, 'destroycat'])->name('deletecateg');
+
+
+Route::post('/createbook', [PerpusController::class, 'inputBook'])->name('input.book');
+Route::get('/createbook', [PerpusController::class, 'createbook'])->name('createbook');
+Route::get('/editbook/{id}', [PerpusController::class, 'editbook'])->name('editbook');
+Route::patch('/update/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
+Route::delete('/delete/{id}', [PerpusController::class, 'destroy'])->name('delete');
+
+
 Route::get('/mycollection/{book}', [PerpusController::class, 'mycollection'])->name('mycollection');
 
 Route::get('/book/{id}', [PerpusController::class, 'show'])->name('book.show');
 Route::get('/export-books',[PerpusController::class, 'exportBooks'])->name('export.books');
 
+Route::put('/update-role/{id}', [PerpusController::class, 'updateRole'])->name('update.role');
 
 
 Route::post('/dashboarduser', [PerpusController::class, 'simpanreview'])->name('simpan.review');
@@ -62,6 +71,7 @@ Route::get('/mycollection', [PerpusController::class, 'myCollection'])->name('my
 Route::get('/borrowed/{book}', [PerpusController::class, 'borrowed'])->name('borrowed');
 
 Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
+Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowedadm');
 
 Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->name('borrow.book');
 
