@@ -4,22 +4,25 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Auth;
 
 class IsGuest
 {
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next)
     {
-        if (Auth::check()){
-            return redirect()->route('dashboarduser');
-        } 
+        if (Auth::check()) {
+            // Jika pengguna sudah terautentikasi, alihkan mereka ke rute dashboard
+            return redirect()->route('dashboarduser')->with('notAllowed', 'You have logged in!');
+        }
+
+        // Jika pengguna belum terautentikasi, lanjutkan eksekusi ke middleware atau controller berikutnya
         return $next($request);
     }
 }

@@ -13,6 +13,7 @@ class Collection extends Model
         'book_id',
     ];
 
+   
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -20,7 +21,12 @@ class Collection extends Model
 
     public function book()
     {
-        return $this->belongsTo(Book::class);
+        return $this->belongsTo(Book::class, 'book_id');
+    }
+
+    public function isBorrowed()
+    {
+        return $this->book->isBorrowed();
     }
     
 }

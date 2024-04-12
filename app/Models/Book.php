@@ -42,6 +42,7 @@ class Book extends Model
         return $this->hasMany(Collection::class);
     }
 
+
     public function borrower()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -60,8 +61,9 @@ class Book extends Model
 
     public function isInCollection($userId)
     {
-        return $this->users()->where('user_id', $userId)->exists();
+        return $this->collections()->where('user_id', $userId)->exists();
     }
+    
 
 
 

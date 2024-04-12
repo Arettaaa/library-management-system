@@ -32,10 +32,10 @@ class User extends Authenticatable
     public function books()
     {
         return $this->belongsToMany(Book::class, 'borrows', 'user_id', 'book_id')
-                    ->withPivot('tanggal_peminjaman', 'tanggal_pengembalian', 'status');
+            ->withPivot('tanggal_peminjaman', 'tanggal_pengembalian', 'status');
     }
-    
-    
+
+
     public function borrows()
     {
         return $this->hasMany(Borrow::class);
@@ -46,7 +46,13 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
-   
+    public function collections()
+    {
+        return $this->hasMany(Collection::class);
+    }
+
+
+
 
 }
 
