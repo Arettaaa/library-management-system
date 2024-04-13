@@ -34,8 +34,8 @@
         <tbody>
             @foreach($borrows as $borrow)
             <tr>
-                <td>{{ $borrow->user->name }}</td>
-                <td>{{ $borrow->book->title }}</td>
+                <td>{{ optional($borrow->user)->name }}</td>
+                <td>{{ optional($borrow->user)->username }}</td>
                 <td>{{ $borrow->tanggal_peminjaman }}</td>
                 <td>{{ $borrow->tanggal_pengembalian }}</td>
                 <td>{{ $borrow->status }}</td>

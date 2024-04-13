@@ -48,8 +48,8 @@
                         @foreach($books as $borrow)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                <div class="font-semibold">{{ $borrow->user->name }}</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400">{{ $borrow->user->username }}</div>
+                                <div class="font-semibold">{{ optional($borrow->user)->name }}</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">{{ optional($borrow->user)->username }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 {{ $borrow->book->title }}
