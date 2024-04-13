@@ -54,6 +54,7 @@ Route::middleware('isLogin', 'CekRole:admin')->group(function () {
     Route::post('/registeruser', [PerpusController::class, 'RegisUser'])->name('register.user');
     Route::get('/edituser/{id}', [PerpusController::class, 'edituser'])->name('user.edit');
     Route::patch('/update/{id}', [PerpusController::class, 'updateuser'])->name('user.update');
+    Route::delete('/deleteuser/{id}', [PerpusController::class, 'destroyuser'])->name('deleteuser');
     Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
     Route::put('/update-role/{id}', [PerpusController::class, 'updateRole'])->name('update.role');
     Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowedadm');

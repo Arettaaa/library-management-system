@@ -327,7 +327,7 @@ class PerpusController extends Controller
     //         'address' => 'required|max:255',
     //         'role' => 'required|in:admin,petugas,peminjam',
     //     ]);
-    
+
     //     $user = User::findOrFail($id);
     //     $user->update([
     //         'username' => $request->username,
@@ -336,42 +336,46 @@ class PerpusController extends Controller
     //         'address' => $request->address,
     //         'role' => $request->role,
     //     ]);
-    
+
     //     return redirect('/userdata')->with('success', 'User successfully updated.');
     // }
 
     public function updateuser(Request $request, $id)
-{
-    $request->validate([
-        'username' => 'required|min:4|max:255',
-        'name' => 'required|max:255',
-        'email' => 'required|email|max:255',
-        'address' => 'required|max:255',
-        'role' => 'required|in:admin,petugas,peminjam',
-        'password' => 'nullable|min:6', // Ubah menjadi nullable agar tidak wajib diisi
-    ]);
+    {
+        $request->validate([
+            'username' => 'required|min:4|max:255',
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'address' => 'required|max:255',
+            'role' => 'required|in:admin,petugas,peminjam',
+            'password' => 'nullable|min:6', // Ubah menjadi nullable agar tidak wajib diisi
+        ]);
 
-    $user = User::findOrFail($id);
-    $data = [
-        'username' => $request->username,
-        'name' => $request->name,
-        'email' => $request->email,
-        'address' => $request->address,
-        'role' => $request->role,
-    ];
+        $user = User::findOrFail($id);
+        $data = [
+            'username' => $request->username,
+            'name' => $request->name,
+            'email' => $request->email,
+            'address' => $request->address,
+            'role' => $request->role,
+        ];
 
-    // Periksa apakah ada input password baru
-    if ($request->has('password')) {
-        // Jika ada, tambahkan password baru ke dalam data yang akan diupdate
-        $data['password'] = bcrypt($request->password);
+        // Periksa apakah ada input password baru
+        if ($request->has('password')) {
+            // Jika ada, tambahkan password baru ke dalam data yang akan diupdate
+            $data['password'] = bcrypt($request->password);
+        }
+
+        $user->update($data);
+
+        return redirect('/userdata')->with('success', 'User successfully updated.');
     }
 
-    $user->update($data);
-
-    return redirect('/userdata')->with('success', 'User successfully updated.');
-}
-
-    
+    public function destroyuser($id)
+    {
+        User::where('id', '=', $id)->delete();
+        return redirect()->back();
+    }
 
     public function simpanReview(Request $request)
     {
