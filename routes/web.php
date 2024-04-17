@@ -71,7 +71,6 @@ Route::middleware('isLogin', 'CekRole:peminjam')->group(function () {
     Route::post('/dashboarduser', [PerpusController::class, 'simpanreview'])->name('simpan.review');
     Route::post('/add-to-collection/{id}', [PerpusController::class, 'addToCollection'])->name('add.to.collection');
     Route::get('/mycollection', [PerpusController::class, 'myCollection'])->name('mycollection');
-    Route::get('/borrowed/{book}', [PerpusController::class, 'borrowed'])->name('borrowed');
     Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
 });
 

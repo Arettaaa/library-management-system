@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-use App\Exports\BookExport;
-use Maatwebsite\Excel\Facades\Excel;
 use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
@@ -15,8 +13,6 @@ use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\FromCollection;
-
 
 class PerpusController extends Controller
 {
@@ -340,6 +336,30 @@ class PerpusController extends Controller
     //     return redirect('/userdata')->with('success', 'User successfully updated.');
     // }
 
+    // public function CollectBook($bookId)
+    // {
+
+    //     $userId = Auth::id();
+
+    //     $book = Book::find($bookId);
+
+    //     if (!$book) {
+    //         return redirect()->back();
+    //     }
+
+    //     if ($book->IsInCollect($userId)) {
+    //         return redirect()->back();
+    //     }
+
+    //     Collection::create([
+    //         'user_id' => $userId,
+    //         'book_id' => $bookId,
+    //     ]);
+
+    //     return redirect('/book');
+    // }
+
+
     public function updateuser(Request $request, $id)
     {
         $request->validate([
@@ -384,29 +404,21 @@ class PerpusController extends Controller
             'rating' => 'required|numeric|min:1|max:5',
             'review' => 'required|string|max:255',
         ]);
-
-        $existingReview = Review::where('book_id', $request->book_id)
-            ->where('user_id', Auth::id())
-            ->first();
-
-        // Jika pengguna telah memberikan ulasan, update ulasan yang ada
-        if ($existingReview) {
-            $existingReview->update([
-                'rating' => $request->rating,
-                'review' => $request->review,
-            ]);
-        } else {
-            // Jika belum, buat ulasan baru
-            Review::create([
-                'user_id' => Auth::id(),
+    
+        Review::updateOrCreate(
+            [
                 'book_id' => $request->book_id,
+                'user_id' => Auth::id(),
+            ],
+            [
                 'rating' => $request->rating,
                 'review' => $request->review,
-            ]);
-        }
-
+            ]
+        );
+    
         return redirect()->back()->with('success', 'Review saved successfully!');
     }
+    
 
 
     public function addToCollection($bookId)
@@ -473,16 +485,11 @@ class PerpusController extends Controller
 
     private function generatePDF($view, $data, $filename)
     {
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true);
 
-        $dompdf = new Dompdf($options);
-        $html = view($view, $data)->render();
-        $dompdf->loadHtml($html);
-
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml(view($view, $data)->render());
+        $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
-
         return $dompdf->stream($filename);
     }
 

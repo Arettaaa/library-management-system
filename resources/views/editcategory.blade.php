@@ -2,9 +2,6 @@
 
 @section('content')
 <main class="h-full pb-16 overflow-y-auto">
-    <form method="POST" action="{{ route('updatecateg', $category->id) }}" id="create-form">
-        @method('PATCH')
-        @csrf
 
         <div class="container px-6 mx-auto grid">
             <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
@@ -17,7 +14,8 @@
             </a>
 
             <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                <form action="{{ route('input.book') }}" method="POST" class="form">
+                <form method="POST" action="{{ route('updatecateg', $category->id) }}" id="create-form">
+                    @method('PATCH')
                     @csrf
                     <label class="block text-sm">
                         <span class="text-gray-700 dark:text-gray-400">Name Category</span>

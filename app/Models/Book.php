@@ -23,8 +23,7 @@ class Book extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'borrows', 'book_id', 'user_id')
-            ->withPivot('status', 'tanggal_peminjaman', 'tanggal_pengembalian');
+        return $this->belongsToMany(User::class, 'borrows', 'book_id', 'user_id');
     }
 
     public function borrows()
@@ -41,8 +40,6 @@ class Book extends Model
     {
         return $this->hasMany(Collection::class);
     }
-
-
     public function borrower()
     {
         return $this->belongsTo(User::class, 'user_id');
@@ -57,7 +54,6 @@ class Book extends Model
     {
         return $this->borrows()->where('status', 'borrowed')->exists();
     }
-
 
     public function isInCollection($userId)
     {
