@@ -1,5 +1,4 @@
-@extends('layoutdet')
-
+@extends('layout')
 @section('content')
 <main class="h-full pb-16 overflow-y-auto">
 
