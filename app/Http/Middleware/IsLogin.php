@@ -21,7 +21,6 @@ class IsLogin
             return $next($request);
         }
         
-        // Jika pengguna belum terautentikasi, alihkan mereka ke rute login
         return redirect()->route('login');
     }
 }

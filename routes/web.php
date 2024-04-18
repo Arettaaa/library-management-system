@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-
-
-
 Route::middleware('isGuest')->group(function () {
     Route::get('/register', [PerpusController::class, 'register'])->name('register');
     Route::post('/register', [PerpusController::class, 'inputRegister'])->name('register.post');
@@ -56,7 +51,6 @@ Route::middleware('isLogin', 'CekRole:admin')->group(function () {
     Route::patch('/update/{id}', [PerpusController::class, 'updateuser'])->name('user.update');
     Route::delete('/deleteuser/{id}', [PerpusController::class, 'destroyuser'])->name('deleteuser');
     Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
-    Route::put('/update-role/{id}', [PerpusController::class, 'updateRole'])->name('update.role');
     Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowedadm');
     Route::get('/borrows/export-pdf', [PerpusController::class, 'exportBorrowsPDF'])->name('borrows.export.pdf');
     Route::get('/user/export-pdf', [PerpusController::class, 'exportUserPDF'])->name('users.export.pdf');

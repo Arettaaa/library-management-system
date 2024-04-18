@@ -21,21 +21,6 @@ class PerpusController extends Controller
         return view('login');
     }
 
-    // public function auth(Request $request)
-    // {
-    //     $request->validate([
-    //         'username' => 'required|min:4|max:8',
-    //         'password' => 'required',
-    //     ]);
-
-    //     $user = $request->only('username', 'password');
-    //     if (Auth::attempt($user)) {
-    //         return redirect()->route('dashboarduser');
-    //     } else {
-    //         return redirect('/login')->with('fail', "Gagal login, periksa dan coba lagi!");
-    //     }
-    // }
-
     public function auth(Request $request)
     {
         $request->validate([
@@ -45,14 +30,11 @@ class PerpusController extends Controller
 
         $user = $request->only('username', 'password');
         if (Auth::attempt($user)) {
-            // Periksa peran pengguna setelah berhasil login
             $role = Auth::user()->role;
 
-            // Arahkan ke halaman dashboard
             if ($role === 'admin' || $role === 'petugas') {
                 return redirect()->route('dashboard');
             } else {
-                // Arahkan pengguna dengan peran lain ke halaman default
                 return redirect()->route('dashboarduser');
             }
         } else {
@@ -78,7 +60,7 @@ class PerpusController extends Controller
             'username' => 'required|min:4|max:8',
             'password' => 'required',
             'address' => 'required',
-            'role' => 'required|in:admin,petugas,peminjam', // Tambahkan validasi untuk peran
+            'role' => 'required|in:admin,petugas,peminjam', 
         ]);
 
         User::create([
@@ -87,7 +69,7 @@ class PerpusController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'address' => $request->address,
-            'role' => $request->role, // Simpan peran yang dipilih
+            'role' => $request->role,  
         ]);
 
         return redirect('/userdata')->with('success', 'berhasil membuat akun!');
@@ -188,12 +170,10 @@ class PerpusController extends Controller
         $userId = Auth::id();
         $book = Book::findOrFail($bookId);
 
-        // Periksa apakah buku sudah dipinjam sebelumnya
         if ($book->isBorrowed()) {
             return redirect()->back()->with('error', 'Buku sudah dipinjam.');
         }
 
-        // Simpan data peminjaman buku ke dalam tabel 'borrows'
         Borrow::create([
             'user_id' => $userId,
             'book_id' => $bookId,
@@ -293,7 +273,6 @@ class PerpusController extends Controller
         $book = Book::findOrFail($id);
         $reviews = $book->review;
 
-        // Periksa apakah pengguna telah meminjam buku tersebut
         $userHasBorrowedBook = Borrow::where('user_id', auth()->id())
             ->where('book_id', $book->id)
             ->exists();
@@ -314,82 +293,27 @@ class PerpusController extends Controller
         return view('edituser', compact('user'));
     }
 
-    // public function updateuser(Request $request, $id)
-    // {
-    //     $request->validate([
-    //         'username' => 'required|min:4|max:255',
-    //         'name' => 'required|max:255',
-    //         'email' => 'required|email|max:255',
-    //         'address' => 'required|max:255',
-    //         'role' => 'required|in:admin,petugas,peminjam',
-    //     ]);
-
-    //     $user = User::findOrFail($id);
-    //     $user->update([
-    //         'username' => $request->username,
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'address' => $request->address,
-    //         'role' => $request->role,
-    //     ]);
-
-    //     return redirect('/userdata')->with('success', 'User successfully updated.');
-    // }
-
-    // public function CollectBook($bookId)
-    // {
-
-    //     $userId = Auth::id();
-
-    //     $book = Book::find($bookId);
-
-    //     if (!$book) {
-    //         return redirect()->back();
-    //     }
-
-    //     if ($book->IsInCollect($userId)) {
-    //         return redirect()->back();
-    //     }
-
-    //     Collection::create([
-    //         'user_id' => $userId,
-    //         'book_id' => $bookId,
-    //     ]);
-
-    //     return redirect('/book');
-    // }
-
-
-    public function updateuser(Request $request, $id)
+    public function UpdateUser(Request $request, $id)
     {
-        $request->validate([
-            'username' => 'required|min:4|max:255',
-            'name' => 'required|max:255',
-            'email' => 'required|email|max:255',
-            'address' => 'required|max:255',
-            'role' => 'required|in:admin,petugas,peminjam',
-            'password' => 'nullable|min:6', // Ubah menjadi nullable agar tidak wajib diisi
-        ]);
-
-        $user = User::findOrFail($id);
+        $user = User::findOrFail('id');
         $data = [
-            'username' => $request->username,
             'name' => $request->name,
+            'username' => $request->username,
             'email' => $request->email,
             'address' => $request->address,
             'role' => $request->role,
         ];
 
-        // Periksa apakah ada input password baru
-        if ($request->has('password')) {
-            // Jika ada, tambahkan password baru ke dalam data yang akan diupdate
-            $data['password'] = bcrypt($request->password);
+        if ($request->has('password')){
+            $data['password']=bcrypt($request->password);
         }
 
         $user->update($data);
 
-        return redirect('/userdata')->with('success', 'User successfully updated.');
+        return redirect('/userdata');
     }
+
+
 
     public function destroyuser($id)
     {
@@ -400,9 +324,9 @@ class PerpusController extends Controller
     public function simpanReview(Request $request)
     {
         $request->validate([
-            'book_id' => 'required|exists:books,id',
-            'rating' => 'required|numeric|min:1|max:5',
-            'review' => 'required|string|max:255',
+            'book_id' => 'required',
+            'rating' => 'required',
+            'review' => 'required',
         ]);
     
         Review::updateOrCreate(
@@ -416,7 +340,7 @@ class PerpusController extends Controller
             ]
         );
     
-        return redirect()->back()->with('success', 'Review saved successfully!');
+        return redirect()->back();
     }
     
 
@@ -473,24 +397,18 @@ class PerpusController extends Controller
 
     public function dashboarduser()
     {
-        $userId = auth()->id();
-        $books = Book::whereDoesntHave('borrows', function ($query) {
-            $query->where('status', 'borrowed');
-        })->orWhereHas('collections', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
-
-        return view('dashboarduser', compact('books'));
+        $categories = Category::all();
+        $books = Book::all();
+        return view('dashboarduser', compact('categories', 'books'));
     }
 
     private function generatePDF($view, $data, $filename)
     {
-
-        $dompdf = new Dompdf();
-        $dompdf->loadHtml(view($view, $data)->render());
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        return $dompdf->stream($filename);
+       $dompdf = new Dompdf();
+       $dompdf->loadHtml(view($view, $data)->render());
+       $dompdf->setPaper('A4', 'potrait');
+       $dompdf->render();
+       return $dompdf->stream($filename);
     }
 
     public function exportBorrowsPDF()

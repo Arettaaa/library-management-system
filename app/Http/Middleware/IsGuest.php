@@ -18,11 +18,9 @@ class IsGuest
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            // Jika pengguna sudah terautentikasi, alihkan mereka ke rute dashboard
-            return redirect()->route('dashboarduser')->with('notAllowed', 'You have logged in!');
+            return redirect()->route('dashboarduser');
         }
 
-        // Jika pengguna belum terautentikasi, lanjutkan eksekusi ke middleware atau controller berikutnya
         return $next($request);
     }
 }
