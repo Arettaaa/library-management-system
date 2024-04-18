@@ -69,7 +69,7 @@ class PerpusController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'address' => $request->address,
-            'role' => $request->role,  
+            'role' => $request->role, 
         ]);
 
         return redirect('/userdata')->with('success', 'berhasil membuat akun!');
@@ -173,7 +173,6 @@ class PerpusController extends Controller
         if ($book->isBorrowed()) {
             return redirect()->back()->with('error', 'Buku sudah dipinjam.');
         }
-
         Borrow::create([
             'user_id' => $userId,
             'book_id' => $bookId,
@@ -293,27 +292,34 @@ class PerpusController extends Controller
         return view('edituser', compact('user'));
     }
 
-    public function UpdateUser(Request $request, $id)
+    public function updateuser(Request $request, $id)
     {
-        $user = User::findOrFail('id');
+        $request->validate([
+            'username' => 'required|min:4|max:255',
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'address' => 'required|max:255',
+            'role' => 'required|in:admin,petugas,peminjam',
+            'password' => 'nullable|min:6', 
+        ]);
+
+        $user = User::findOrFail($id);
         $data = [
-            'name' => $request->name,
             'username' => $request->username,
+            'name' => $request->name,
             'email' => $request->email,
             'address' => $request->address,
             'role' => $request->role,
         ];
 
-        if ($request->has('password')){
-            $data['password']=bcrypt($request->password);
+        if ($request->has('password')) {
+            $data['password'] = bcrypt($request->password);
         }
 
         $user->update($data);
 
-        return redirect('/userdata');
+        return redirect('/userdata')->with('success', 'User successfully updated.');
     }
-
-
 
     public function destroyuser($id)
     {
@@ -324,9 +330,9 @@ class PerpusController extends Controller
     public function simpanReview(Request $request)
     {
         $request->validate([
-            'book_id' => 'required',
-            'rating' => 'required',
-            'review' => 'required',
+            'book_id' => 'required|exists:books,id',
+            'rating' => 'required|numeric|min:1|max:5',
+            'review' => 'required|string|max:255',
         ]);
     
         Review::updateOrCreate(
@@ -340,7 +346,7 @@ class PerpusController extends Controller
             ]
         );
     
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Review saved successfully!');
     }
     
 
@@ -397,18 +403,24 @@ class PerpusController extends Controller
 
     public function dashboarduser()
     {
-        $categories = Category::all();
-        $books = Book::all();
-        return view('dashboarduser', compact('categories', 'books'));
+        $userId = auth()->id();
+        $books = Book::whereDoesntHave('borrows', function ($query) {
+            $query->where('status', 'borrowed');
+        })->orWhereHas('collections', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->get();
+
+        return view('dashboarduser', compact('books'));
     }
 
     private function generatePDF($view, $data, $filename)
     {
-       $dompdf = new Dompdf();
-       $dompdf->loadHtml(view($view, $data)->render());
-       $dompdf->setPaper('A4', 'potrait');
-       $dompdf->render();
-       return $dompdf->stream($filename);
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml(view($view, $data)->render());
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        return $dompdf->stream($filename);
     }
 
     public function exportBorrowsPDF()
