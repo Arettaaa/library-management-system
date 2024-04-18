@@ -131,6 +131,31 @@ class PerpusController extends Controller
     }
     }
 
+    public function inputCategory(Request $request)
+    {
+        $request->validate([
+        'name' => 'required|min:4|max:50',
+        ]);
+
+        Category::create([
+        'name' => $request->name,
+        ]);
+
+        return redirect('/book')->with('success', 'berhasil membuat akun!');
+    }
+
+    public function inputBook(Request $request)
+    {
+        $request->validate([
+        'name' => 'required|min:4|max:50',
+        ]);
+
+        Book::create([
+        'name' => $request->name,
+        ]);
+
+        return redirect('/book')->with('success', 'berhasil membuat akun!');
+    }
 
     public function createbook()
     {
@@ -143,19 +168,6 @@ class PerpusController extends Controller
         $categories = Category::all();
         $books = Book::all();
         return view('book', compact('categories', 'books'));
-    }
-
-    public function inputCategory(Request $request)
-    {
-        $request->validate([
-        'name' => 'required|min:4|max:50',
-        ]);
-
-        Category::create([
-        'name' => $request->name,
-        ]);
-
-        return redirect('/book')->with('success', 'berhasil membuat akun!');
     }
 
 }
