@@ -12,8 +12,9 @@
             </div>
         </a>
         <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-
-            <label class="block text-sm">
+            <form action="{{route('register.user')}}" method="POST" class="form">
+                @csrf
+                <label class="block text-sm">
                     <span class="text-gray-700 dark:text-gray-400">Username</span>
                     <input class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Janedoe" name="username" required />
                 </label>
@@ -44,11 +45,12 @@
                     </span>
                     <select class="block w-full mt-1 text-sm dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 form-select focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="role">
                         <option value="">Choose Role</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="petugas" {{ old('role') == 'petugas' ? 'selected' : '' }}>Petugas</option>
+                        <option value="peminjam" {{ old('role') == 'peminjam' ? 'selected' : '' }}>Peminjam</option>
                     </select>
                 </label>
-
-
-
+                @csrf
                 <div class="flex justify-end">
                     <button type="submit" class="block px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple sm:px-4 sm:py-2 sm:w-auto">
                         Create User

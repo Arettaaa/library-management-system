@@ -17,7 +17,7 @@
                         History Book
                     </p>
                     <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-
+                        {{ $books->count() }}
                     </p>
                 </div>
             </div>
@@ -41,22 +41,27 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                        @foreach($books as $borrow)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                <div class="font-semibold"></div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400"></div>
+                                <div class="font-semibold">{{ $borrow->user->name }}</div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">{{ $borrow->user->username }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm">
-                                <a href="" class="text-purple-600 hover:underline">
+                                <a href="{{ route('book.show', $borrow->book->id) }}" class="text-purple-600 hover:underline">
+                                    {{ $borrow->book->title }}
                             </td>
-                            <td class="px-4 py-3"></td>
-                            <td class="px-4 py-3"></td>
+                            <td class="px-4 py-3">{{ $borrow->tanggal_peminjaman }}</td>
+                            <td class="px-4 py-3">{{ $borrow->tanggal_pengembalian }}</td>
                             <td class="px-4 py-3 text-xs">
                                 <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
+                                    {{ $borrow->status }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-sm text-center">
                                 <div class="flex items-center space-x-4 text-sm">
+                                    <form action="{{ route('return.book', $borrow->book->id) }}" method="POST">
+                                        @csrf
                                         <div class="flex items-center justify-center h-full mt-4">
                                             <button type="submit" class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple mr-2">
                                                 <svg class="w-4 h-4 mr-1 -ml-2 inline-block" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
@@ -69,6 +74,7 @@
                                 </div>
                             </td>
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -14,11 +14,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
+            $table->id();
             $table->string('title');
             $table->string('writer');
             $table->string('publisher');
             $table->integer('pubyear');
             $table->foreignId('category_id');
+            $table->timestamps();
         });
     }
 
@@ -32,3 +34,4 @@ return new class extends Migration
         Schema::dropIfExists('books');
     }
 };
+

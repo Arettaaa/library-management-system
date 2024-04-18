@@ -21,16 +21,45 @@ Route::get('/', function () {
 Route::get('/register', [PerpusController::class, 'register'])->name('register');
 Route::post('/register', [PerpusController::class, 'InputRegister'])->name('register.post');
 
-Route::get('/registeruser', [PerpusController::class, 'register'])->name('register');
+Route::get('/registeruser', [PerpusController::class, 'registeruser'])->name('registeryuser');
 Route::post('/registeruser', [PerpusController::class, 'InputUser'])->name('register.user');
+Route::get('/edituser/{id}', [PerpusController::class, 'edituser'])->name('edituser');
+Route::patch('/updateuser', [PerpusController::class, 'UpdateUser'])->name('update.user');
+Route::delete('/deleteuser/{id}', [PerpusController::class, 'deleteuser'])->name('deleteuser');
 
-Route::post('/login', [PerpusController::class, 'auth'])->name('login.auth');
 Route::get('/login', [PerpusController::class, 'login'])->name('login');
+Route::post('/login', [PerpusController::class, 'auth'])->name('login.auth');
 
+Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
+
+Route::get('/book', [PerpusController::class, 'book'])->name('book');
+Route::post('/book/category', [PerpusController::class, 'InputCategory'])->name('input.category');
+Route::get('/editcategory/{id}', [PerpusController::class, 'editcategory'])->name('editcategory');
 Route::patch('/updatecategory/{id}', [PerpusController::class, 'updatecateg'])->name('updatecateg');
-Route::delete('/deletecateg/{id}', [PerpusController::class, 'destroycat'])->name('deletecateg');
+Route::delete('/deletecateg/{id}', [PerpusController::class, 'deletecategory'])->name('deletecateg');
+
 Route::post('/createbook', [PerpusController::class, 'inputBook'])->name('input.book');
 Route::get('/createbook', [PerpusController::class, 'createbook'])->name('createbook');
 Route::get('/editbook/{id}', [PerpusController::class, 'editbook'])->name('editbook');
-Route::patch('/update/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
-Route::delete('/delete/{id}', [PerpusController::class, 'destroy'])->name('delete');
+Route::patch('/updatebok/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
+Route::delete('/deletebook/{id}', [PerpusController::class, 'deletebook'])->name('deletebook');
+
+
+Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->name('borrow.book');
+Route::get('/dashboarduser', [PerpusController::class, 'dashboarduser'])->name('dashboarduser');
+
+// Route::get('/book', [PerpusController::class, 'book'])->name('book');
+// Route::post('/book/category', [PerpusController::class, 'inputCategory'])->name('input.category');
+// Route::get('/editcategory/{id}', [PerpusController::class, 'editcategory'])->name('editcategory');
+// Route::patch('/updatecategory/{id}', [PerpusController::class, 'updatecateg'])->name('updatecateg');
+// Route::delete('/deletecateg/{id}', [PerpusController::class, 'destroycat'])->name('deletecateg');
+// Route::post('/createbook', [PerpusController::class, 'inputBook'])->name('input.book');
+// Route::get('/createbook', [PerpusController::class, 'createbook'])->name('createbook');
+// Route::get('/editbook/{id}', [PerpusController::class, 'editbook'])->name('editbook');
+// Route::patch('/update/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
+// Route::delete('/delete/{id}', [PerpusController::class, 'destroy'])->name('delete');
+Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->name('borrow.book');
+// Route::post('/return-book/{bookId}', [PerpusController::class, 'returnBook'])->name('return.book');
+Route::post('/dashboarduser', [PerpusController::class, 'simpanreview'])->name('simpan.review');
+Route::get('/mycollection', [PerpusController::class, 'myCollection'])->name('mycollection');
+Route::post('/collect-book/{book}', [PerpusController::class, 'collectBook'])->name('collect.book');
