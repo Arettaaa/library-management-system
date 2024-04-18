@@ -9,18 +9,14 @@
             width: 100%;
             border-collapse: collapse;
         }
-
-        th,
-        td {
+        th, td {
             border: 1px solid #dddddd;
             text-align: left;
             padding: 8px;
         }
-
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-
     </style>
 </head>
 <body>
@@ -28,24 +24,22 @@
     <table>
         <thead>
             <tr>
-                <th>Name</th>
+                <th>Nama</th>
                 <th>Email</th>
-                <th>Address</th>
+                <th>Alamat</th>
                 <th>Role</th>
-
             </tr>
         </thead>
         <tbody>
+            @foreach($users as $user)
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->address }}</td>
+                <td>{{ $user->role }}</td>
             </tr>
+            @endforeach
         </tbody>
     </table>
-</body>
-</html>
-
 </body>
 </html>

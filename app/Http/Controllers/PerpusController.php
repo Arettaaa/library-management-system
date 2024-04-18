@@ -6,6 +6,7 @@ use App\Models\Borrow;
 use App\Models\Category;
 use App\Models\Collection;
 use App\Models\User;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -96,11 +97,11 @@ class PerpusController extends Controller
 
     public function dashboard()
     {
-        $adminsCount = User::where('role', 'admin')->count();
-        $officersCount = User::where('role', 'petugas')->count();
-        $borrowersCount = User::where('role', 'peminjam')->count();
+        $admins = User::where('role', 'admin')->count();
+        $officer = User::where('role', 'petugas')->count();
+        $borrowers = User::where('role', 'peminjam')->count();
         $books = Book::all();
-        return view('dashboard', compact('adminsCount', 'officersCount', 'borrowersCount', 'books'));
+        return view('dashboard', compact('admins', 'officer', 'borrowers', 'books'));
     }
 
 
@@ -176,7 +177,7 @@ class PerpusController extends Controller
             'status' => 'borrowed',
         ]);
 
-        return redirect()->route('borrowed')->with('success', 'Book borrowed successfully!');
+        return redirect()->route('borrowed');
     }
 
 
@@ -263,11 +264,11 @@ class PerpusController extends Controller
         $book = Book::findOrFail($bookId);
 
         if (!$book) {
-            return redirect()->back()->with('error', 'Buku sudah dipinjam.');
+            return redirect()->back();
         }
 
         if ($book->isInCollect($userId)) {
-            return redirect()->back()->with('error', 'Buku sudah dipinjam.');
+            return redirect()->back();
         }
 
         Collection::create([
@@ -385,5 +386,37 @@ class PerpusController extends Controller
         return view('dashboarduser', compact('books'));
     }
 
+    private function generatePDF($view, $data, $filename)
+    {
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml(view($view, $data)->render());
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        return $dompdf->stream($filename);
+    }
 
+
+    public function exportBorrows()
+        {
+            $borrows = Borrow::all();
+            return $this->generatePDF('pdf.borrows', compact('borrows'), 'borrows.pdf');
+        }
+
+    public function exportCate()
+        {
+            $categories = Category::all();
+            return $this->generatePDF('pdf.category', compact('categories'), 'categories.pdf');
+        }
+
+    public function exportBooks()
+        {
+            $books = Book::all();
+            return $this->generatePDF('pdf.books', compact('books'), 'books.pdf');
+        }
+
+    public function exportUser()
+        {
+            $users = User::all();
+            return $this->generatePDF('pdf.user', compact('users'), 'users.pdf');
+        }
 }

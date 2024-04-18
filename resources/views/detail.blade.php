@@ -44,49 +44,68 @@
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-4 mb-8">
+           @if($userHasBorrowedBook)
+           <form action="{{ isset($review) ? route('update.review', $review->id) : route('review.book') }}" method="POST">
+           @csrf
+           @if(isset($review))
+           @method('PUT')
+           <input type="hidden" name="book_id" value="{{ $review->book_id }}">
+           @else
+           <input type="hidden" name="book_id" value="{{ $book->id }}">
+           @endif
 
-            <form action="" method="POST">
-                <input type="hidden" name="" value="">
-                <input type="hidden" name="book_id" value="">
-                <div class="flex items-center mb-4">
-                    <div class="mt-2 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400 text-semibold">Rating</span>
-                        <div class="mt-4">
-                            <label class="inline-flex items-center text-gray-600 dark:text-gray-400">
-                                <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="" value="1" />
-                                <span class="ml-2">1</span>
-                            </label>
-                            <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
-                                <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="" value="2" />
-                                <span class="ml-2">2</span>
-                            </label>
-                            <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
-                                <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="" value="3" />
-                                <span class="ml-2">3</span>
-                            </label>
-                            <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
-                                <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="" value="4" />
-                                <span class="ml-2">4</span>
-                            </label>
-                            <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
-                                <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="5" />
-                                <span class="ml-2">5</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+           <div class="flex items-center mb-4">
+           <div class="mt-2 text-sm">
+           <span class="text-gray-700 dark:text-gray-400 text-semibold">Rating</span>
+           <div class="mt-4">
+           <label class="inline-flex items-center text-gray-600 dark:text-gray-400">
+           <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="1" />
+           <span class="ml-2">1</span>
+           </label>
+           <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
+           <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="2" />
+           <span class="ml-2">2</span>
+           </label>
+           <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
+           <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="3" />
+           <span class="ml-2">3</span>
+           </label>
+           <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
+           <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="4" />
+           <span class="ml-2">4</span>
+           </label>
+           <label class="inline-flex items-center ml-6 text-gray-600 dark:text-gray-400">
+           <input type="radio" class="text-purple-600 form-radio focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray" name="rating" value="5" />
+           <span class="ml-2">5</span>
+           </label>
+           </div>
+           </div>
+           </div>
 
-                <div class="relative text-gray-500 focus-within:text-purple-600">
-                    <textarea class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" placeholder="Review" name="review">{{ isset($review) ? $review->review : '' }}</textarea>
-                    <button type="submit" class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                        Submit
-                    </button>
-                </div>
-            </form>
-            {{-- <p class="text-gray-700 dark:text-gray-400">You must borrow this book before you can review it.</p> --}}
-        </div>
+           <div class="relative text-gray-500 focus-within:text-purple-600">
+           <textarea class="block w-full pr-20 mt-1 text-sm text-black dark:text-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:focus:shadow-outline-gray form-input" placeholder="Review" name="review">{{ isset($review) ? $review->review : '' }}</textarea>
+           <button type="submit" class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-r-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+           Submit
+           </button>
+           </div>
+           </form>
+           @else
+           <p class="text-gray-700 dark:text-gray-400">You must borrow this book before you can review it.</p>
+           @endif
+            </div>
 
+             public function show($id)
+                {
+                    $book = Book::findOrFail($id);
+                    $reviews = $book->review;
 
+                    // Periksa apakah pengguna telah meminjam buku tersebut
+                    $userHasBorrowedBook = Borrow::where('user_id', auth()->id())
+                        ->where('book_id', $book->id)
+                        ->exists();
+
+                    return view('detail', compact('book', 'reviews', 'userHasBorrowedBook'));
+                }
 
 
 

@@ -52,12 +52,22 @@ Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->nam
 Route::post('/dashboarduser', [PerpusController::class, 'simpanreview'])->name('simpan.review');
 Route::get('/mycollection', [PerpusController::class, 'myCollection'])->name('mycollection');
 Route::post('/collect-book/{book}', [PerpusController::class, 'collectBook'])->name('collect.book');
+
 Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
+Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowed_admin');
+
+
 Route::post('/return-book/{bookId}', [PerpusController::class, 'returnBook'])->name('return.book');
 
 
 Route::get('/error', [PerpusController::class, 'error'])->name('error');
 Route::get('/logout', [PerpusController::class, 'logout'])->name('logout');
+
+
+Route::get('borrows/export-borrow', [PerpusController::class, 'exportBorrows'])->name('borrow.export');
+Route::get('user/export-pdf', [PerpusController::class, 'exportUser'])->name('user.export');
+Route::get('category/export-pdf', [PerpusController::class, 'exportCate'])->name('category.export');
+Route::get('books/export-pdf', [PerpusController::class, 'exportBooks'])->name('book.export');
 
 
 
