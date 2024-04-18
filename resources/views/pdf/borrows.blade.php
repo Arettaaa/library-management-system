@@ -32,10 +32,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($borrows as $borrow)
+            @foreach($books as $borrow)
             <tr>
-                <td>{{ optional($borrow->user)->name }}</td>
-                <td>{{ optional($borrow->user)->username }}</td>
+                <td>{{ $borrow->user->name }}</td>
                 <td>{{ $borrow->tanggal_peminjaman }}</td>
                 <td>{{ $borrow->tanggal_pengembalian }}</td>
                 <td>{{ $borrow->status }}</td>
