@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('publisher');
             $table->integer('pubyear');
             $table->foreignId('category_id');
+            $table->integer('stock')->default(0);
             $table->timestamps();
         });
     }

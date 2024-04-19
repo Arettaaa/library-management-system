@@ -107,9 +107,9 @@
                             <td class="px-4 py-3 text-sm">{{ $book->publisher }}
                             <td class="px-4 py-3 text-sm text-center">{{ $book->pubyear}}</td>
                             <td class="px-4 py-3 text-xs">
-                                @if ($book->borrows->where('status', 'borrowed')->count() > 0)
+                                @if ($book->stock <= 0)
                                 <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
-                                    BORROWED
+                                    NOT AVAILABLE
                                 </span>
                                 @else
                                 <span class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100">

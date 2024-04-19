@@ -16,6 +16,9 @@
                 <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     <a href="{{ route('users.export.pdf') }}" class="text-white">Export PDF</a>
                 </button>
+                <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <a href="{{ route('export.users') }}" class="text-white">Export Excel</a>
+                </button>
             </div>
         </h4>
         <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">

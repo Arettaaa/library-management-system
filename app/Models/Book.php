@@ -14,6 +14,7 @@ class Book extends Model
         'publisher',
         'pubyear',
         'category_id',
+        'stock',
     ];
 
     public function category()
@@ -40,28 +41,20 @@ class Book extends Model
     {
         return $this->hasMany(Collection::class);
     }
-    public function borrower()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 
     public function borrowedBooks()
     {
         return $this->belongsToMany(Borrow::class, 'borrowed_book')->withPivot('status', 'tanggal_peminjaman', 'tanggal_pengembalian');
     }
 
-    public function isBorrowed()
-    {
-        return $this->borrows()->where('status', 'borrowed')->exists();
-    }
+    // public function isBorrowed($userId)
+    // {
+    //     return $this->borrows()->where('user_id', $userId)->where('status', 'borrowed')->exists();
+    // }
 
     public function isInCollection($userId)
     {
         return $this->collections()->where('user_id', $userId)->exists();
     }
     
-
-
-
-
 }

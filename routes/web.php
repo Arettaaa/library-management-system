@@ -31,6 +31,7 @@ Route::middleware(['isLogin', 'CekRole:admin,petugas,peminjam'])->group(function
 Route::middleware(['isLogin', 'CekRole:admin,petugas'])->group(function () {
     Route::get('/dashboard', [PerpusController::class, 'dashboard'])->name('dashboard');
     Route::get('/book', [PerpusController::class, 'book'])->name('book');
+    Route::get('/bookex', [PerpusController::class, 'bookex'])->name('bookex');
     Route::post('/book/category', [PerpusController::class, 'inputCategory'])->name('input.category');
     Route::get('/editcategory/{id}', [PerpusController::class, 'editcategory'])->name('editcategory');
     Route::patch('/updatecategory/{id}', [PerpusController::class, 'updatecateg'])->name('updatecateg');
@@ -38,7 +39,7 @@ Route::middleware(['isLogin', 'CekRole:admin,petugas'])->group(function () {
     Route::post('/createbook', [PerpusController::class, 'inputBook'])->name('input.book');
     Route::get('/createbook', [PerpusController::class, 'createbook'])->name('createbook');
     Route::get('/editbook/{id}', [PerpusController::class, 'editbook'])->name('editbook');
-    Route::patch('/update/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
+    Route::patch('/updatebook/{id}', [PerpusController::class, 'updatebook'])->name('updatebook');
     Route::delete('/delete/{id}', [PerpusController::class, 'destroy'])->name('delete');
     Route::get('/category/export-pdf', [PerpusController::class, 'exportCatePDF'])->name('categories.export.pdf');
     Route::get('/books/export-pdf', [PerpusController::class, 'exportBooksPDF'])->name('books.export.pdf');
@@ -56,7 +57,7 @@ Route::middleware('isLogin', 'CekRole:admin')->group(function () {
     Route::get('/user/export-pdf', [PerpusController::class, 'exportUserPDF'])->name('users.export.pdf');
 });
 
-Route::middleware('isLogin', 'CekRole:peminjam')->group(function () {
+// Route::middleware('isLogin', 'CekRole:peminjam')->group(function () {
     Route::post('simpanreview', [PerpusController::class, 'simpanreview'])->name('review.book');
     Route::post('simpanreview/update/{id}', [PerpusController::class, 'simpanreview'])->name('update.review');
     Route::get('/mycollection/{book}', [PerpusController::class, 'mycollection'])->name('mycollection');
@@ -66,9 +67,16 @@ Route::middleware('isLogin', 'CekRole:peminjam')->group(function () {
     Route::post('/add-to-collection/{id}', [PerpusController::class, 'addToCollection'])->name('add.to.collection');
     Route::get('/mycollection', [PerpusController::class, 'myCollection'])->name('mycollection');
     Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
-});
+// });
 
 
 
 Route::get('/error', [PerpusController::class, 'error'])->name('error');
 Route::get('/logout', [PerpusController::class, 'logout'])->name('logout');
+Route::get('/search', [PerpusController::class, 'searchBooks'])->name('search.books');
+Route::get('/cari', [PerpusController::class, 'cariBooks'])->name('cari.book');
+
+Route::get('/export/books', [PerpusController::class, 'exportBooks'])->name('export.books');
+Route::get('/export/categories', [PerpusController::class, 'exportCategories'])->name('export.categories');
+Route::get('/export/borrows', [PerpusController::class, 'exportBorrows'])->name('export.borrows');
+Route::get('/export/users', [PerpusController::class, 'exportUsers'])->name('export.users');

@@ -29,6 +29,9 @@
                 <a href="{{ route('borrows.export.pdf') }}" class="mr-2 px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
                     Export PDF
                 </a>
+                <button class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                    <a href="{{ route('export.borrows') }}" class="text-white">Export Excel</a>
+                </button>
             </div>
         </h4>
 

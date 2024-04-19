@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use Dompdf\Dompdf;
-use Dompdf\Options;
 use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
 use App\Models\Collection;
 use App\Models\User;
 use App\Models\Review;
+use App\Exports\BooksExport;
+use App\Exports\UsersExport;
+use App\Exports\CategoriesExport;
+use App\Exports\BorrowsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PerpusController extends Controller
 {
@@ -60,7 +64,7 @@ class PerpusController extends Controller
             'username' => 'required|min:4|max:8',
             'password' => 'required',
             'address' => 'required',
-            'role' => 'required|in:admin,petugas,peminjam', 
+            'role' => 'required|in:admin,petugas,peminjam',
         ]);
 
         User::create([
@@ -69,7 +73,7 @@ class PerpusController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'address' => $request->address,
-            'role' => $request->role, 
+            'role' => $request->role,
         ]);
 
         return redirect('/userdata')->with('success', 'berhasil membuat akun!');
@@ -129,6 +133,15 @@ class PerpusController extends Controller
         return view('book', compact('categories', 'books'));
     }
 
+
+    public function bookex()
+    {
+        $categories = Category::all();
+        $books = Book::all();
+        return view('bookex', compact('categories', 'books'));
+    }
+
+
     public function inputCategory(Request $request)
     {
         $request->validate([
@@ -150,6 +163,7 @@ class PerpusController extends Controller
             'publisher' => 'required',
             'pubyear' => 'required|integer',
             'category_id' => 'required',
+            'stock' => 'required',
         ]);
 
         $pubyear = intval($request->pubyear);
@@ -160,6 +174,7 @@ class PerpusController extends Controller
             'publisher' => $request->publisher,
             'pubyear' => $pubyear,
             'category_id' => $request->category_id,
+            'stock' => $request->stock,
         ]);
 
         return redirect('/book')->with('success', 'berhasil membuat akun!');
@@ -170,9 +185,10 @@ class PerpusController extends Controller
         $userId = Auth::id();
         $book = Book::findOrFail($bookId);
 
-        if ($book->isBorrowed()) {
-            return redirect()->back()->with('error', 'Buku sudah dipinjam.');
+        if ($book->stock <= 0) {
+            return redirect()->back();
         }
+
         Borrow::create([
             'user_id' => $userId,
             'book_id' => $bookId,
@@ -180,7 +196,9 @@ class PerpusController extends Controller
             'status' => 'borrowed',
         ]);
 
-        return redirect()->route('borrowed')->with('success', 'Book borrowed successfully!');
+        $book->decrement('stock');
+
+        return redirect()->route('borrowed');
     }
 
 
@@ -199,11 +217,13 @@ class PerpusController extends Controller
                 'tanggal_pengembalian' => now(),
             ]);
 
+            $book = Book::find($bookId);
+            $book->stock += 1;
+            $book->save();
 
-            return redirect('/dashboarduser')->with('success', 'Book returned successfully.');
+            return redirect('/dashboarduser');
         }
-
-        return redirect('/borrowed')->with('error', 'Book not found in your collection.');
+        return redirect('/borrowed');
     }
 
     public function editcategory($id)
@@ -246,6 +266,7 @@ class PerpusController extends Controller
             'publisher' => 'required',
             'pubyear' => 'required|integer',
             'category_id' => 'required',
+            'stock' => 'required',
         ]);
 
         $pubyear = intval($request->pubyear);
@@ -256,6 +277,7 @@ class PerpusController extends Controller
             'publisher' => $request->publisher,
             'pubyear' => $pubyear,
             'category_id' => $request->category_id,
+            'stock' => $request->stock,
         ]);
 
         return redirect('/book')->with('success', 'berhasil membuat akun!');
@@ -300,7 +322,7 @@ class PerpusController extends Controller
             'email' => 'required|email|max:255',
             'address' => 'required|max:255',
             'role' => 'required|in:admin,petugas,peminjam',
-            'password' => 'nullable|min:6', 
+            'password' => 'nullable',
         ]);
 
         $user = User::findOrFail($id);
@@ -334,7 +356,7 @@ class PerpusController extends Controller
             'rating' => 'required|numeric|min:1|max:5',
             'review' => 'required|string|max:255',
         ]);
-    
+
         Review::updateOrCreate(
             [
                 'book_id' => $request->book_id,
@@ -345,30 +367,29 @@ class PerpusController extends Controller
                 'review' => $request->review,
             ]
         );
-    
-        return redirect()->back()->with('success', 'Review saved successfully!');
+        return redirect()->back();
     }
-    
+
 
 
     public function addToCollection($bookId)
     {
         $userId = Auth::id();
-        $book = Book::findOrFail($bookId);
         $user = Auth::user();
 
-        if (!$user->books()->where('books.id', $bookId)->exists()) {
-            Collection::create([
-                'user_id' => $userId,
-                'book_id' => $bookId,
-            ]);
+        $book = Book::findOrFail($bookId);
 
-            return redirect()->route('mycollection')->with('success', 'Book added to your collection.');
-        } else {
-            return redirect()->route('dashboarduser')->with('error', 'Book is already in your collection.');
+        if ($book->isInCollection($userId)) {
+            return redirect()->route('dashboarduser');
         }
-    }
 
+        Collection::create([
+            'user_id' => $userId,
+            'book_id' => $bookId,
+        ]);
+
+        return redirect()->route('mycollection');
+    }
 
     public function mycollection()
     {
@@ -403,13 +424,7 @@ class PerpusController extends Controller
 
     public function dashboarduser()
     {
-        $userId = auth()->id();
-        $books = Book::whereDoesntHave('borrows', function ($query) {
-            $query->where('status', 'borrowed');
-        })->orWhereHas('collections', function ($query) use ($userId) {
-            $query->where('user_id', $userId);
-        })->get();
-
+        $books = Book::all();
         return view('dashboarduser', compact('books'));
     }
 
@@ -455,6 +470,73 @@ class PerpusController extends Controller
     {
         return view('error');
     }
+
+    public function searchBooks(Request $request)
+    {
+        $cari = $request->input('cari');
+
+        $books = Book::whereHas('category', function ($query) use ($cari) {
+            $query->where('name', 'like', "%$cari%");
+        })
+            ->orWhere('title', 'like', "%$cari%")
+            ->orWhere('writer', 'like', "%$cari%")
+            ->orWhere('publisher', 'like', "%$cari%")
+            ->orWhere('pubyear', 'like', "%$cari%")
+            ->get();
+
+        return view('bookex', compact('books', 'cari'));
+    }
+
+    public function cariBooks(Request $request)
+    {
+        $cari = $request->input('cari');
+
+        $books = Book::whereHas('category', function ($query) use ($cari) {
+            $query->where('name', 'like', "%$cari%");
+        })
+            ->orWhere('title', 'like', "%$cari%")
+            ->orWhere('writer', 'like', "%$cari%")
+            ->orWhere('publisher', 'like', "%$cari%")
+            ->orWhere('pubyear', 'like', "%$cari%")
+            ->get();
+
+        return view('dashboarduser', compact('books', 'cari'));
+    }
+
+    public function exportBooks(Request $request)
+    {
+        $cari = $request->input('cari');
+
+        $books = Book::query()
+            ->where(function ($query) use ($cari) {
+                $query->where('title', 'like', "%$cari%")
+                    ->orWhere('writer', 'like', "%$cari%")
+                    ->orWhere('publisher', 'like', "%$cari%")
+                    ->orWhere('pubyear', 'like', "%$cari%");
+            })
+            ->whereHas('category', function ($query) use ($cari) {
+                $query->where('name', 'like', "%$cari%");
+            })
+            ->get();
+
+        return Excel::download(new BooksExport($books), 'books.xlsx');
+    }
+
+    public function exportCategories()
+    {
+        return Excel::download(new CategoriesExport(), 'categories.xlsx');
+    }
+
+    public function exportUsers()
+    {
+        return Excel::download(new UsersExport(), 'users.xlsx');
+    }
+
+    public function exportBorrows()
+    {
+        return Excel::download(new BorrowsExport(), 'borrows.xlsx');
+    }
+
 
 
 }

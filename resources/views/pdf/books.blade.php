@@ -25,6 +25,7 @@
     <thead>
         <tr>
             <th>Title</th>
+            <th>Category</th>
             <th>Writer</th>
             <th>Publisher</th>
             <th>Publication Year</th>
@@ -34,6 +35,7 @@
         @foreach($books as $book)
         <tr>
             <td>{{ $book->title }}</td>
+            <td>{{ $book->category->name }}</td>
             <td>{{ $book->writer }}</td>
             <td>{{ $book->publisher }}</td>
             <td>{{ $book->pubyear }}</td>
