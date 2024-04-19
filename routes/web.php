@@ -14,9 +14,6 @@ use App\Http\Controllers\PerpusController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::get('/register', [PerpusController::class, 'register'])->name('register');
 Route::post('/register', [PerpusController::class, 'InputRegister'])->name('register.post');
@@ -26,10 +23,8 @@ Route::post('/registeruser', [PerpusController::class, 'InputUser'])->name('regi
 Route::get('/edituser/{id}', [PerpusController::class, 'edituser'])->name('edituser');
 Route::patch('/updateuser{id}', [PerpusController::class, 'UpdateUser'])->name('user.update');
 Route::delete('/deleteuser/{id}', [PerpusController::class, 'destroyuser'])->name('deleteuser');
-
 Route::get('/', [PerpusController::class, 'login'])->name('login');
 Route::post('/login', [PerpusController::class, 'auth'])->name('login.auth');
-
 Route::get('/userdata', [PerpusController::class, 'userdata'])->name('userdata');
 
 Route::get('/book', [PerpusController::class, 'book'])->name('book');
@@ -47,6 +42,8 @@ Route::delete('/deletebook/{id}', [PerpusController::class, 'destroy'])->name('d
 
 Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->name('borrow.book');
 Route::get('/dashboarduser', [PerpusController::class, 'dashboarduser'])->name('dashboarduser');
+Route::get('/dashboard', [PerpusController::class, 'dashboard'])->name('dashboard');
+
 
 Route::post('/borrow-book/{book}', [PerpusController::class, 'borrowBook'])->name('borrow.book');
 Route::post('/dashboarduser', [PerpusController::class, 'simpanreview'])->name('simpan.review');
@@ -56,10 +53,7 @@ Route::post('/collect-book/{book}', [PerpusController::class, 'collectBook'])->n
 Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
 Route::get('/borrowed_admin', [PerpusController::class, 'borrowed_admin'])->name('borrowed_admin');
 
-
 Route::post('/return-book/{bookId}', [PerpusController::class, 'returnBook'])->name('return.book');
-
-
 Route::get('/error', [PerpusController::class, 'error'])->name('error');
 Route::get('/logout', [PerpusController::class, 'logout'])->name('logout');
 
@@ -69,5 +63,7 @@ Route::get('user/export-pdf', [PerpusController::class, 'exportUser'])->name('us
 Route::get('category/export-pdf', [PerpusController::class, 'exportCate'])->name('category.export');
 Route::get('books/export-pdf', [PerpusController::class, 'exportBooks'])->name('book.export');
 
-
+Route::post('simpanreview', [PerpusController::class, 'simpanreview'])->name('review.book');
+Route::post('simpanreview/update/{id}', [PerpusController::class, 'simpanreview'])->name('update.review');
+Route::get('/book/{id}', [PerpusController::class, 'show'])->name('book.show');
 

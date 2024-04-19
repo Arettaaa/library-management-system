@@ -20,7 +20,7 @@
     </style>
 </head>
 <body>
-<h2>Borrow List</h2>
+<h2>Book List</h2>
    <table>
     <thead>
         <tr>

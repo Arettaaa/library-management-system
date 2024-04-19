@@ -60,7 +60,7 @@
                             </td>
                             <td class="px-4 py-3 text-sm text-center">
                                 <div class="flex items-center space-x-4 text-sm">
-                                    <form action="" method="POST">
+                                    <form action="{{ route('return.book', $borrow->id) }}" method="POST">
                                         @csrf
                                         <div class="flex items-center justify-center h-full mt-4">
                                             <button type="submit" class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple mr-2">

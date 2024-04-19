@@ -16,8 +16,8 @@
                     <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
                         Total Book
                     </p>
-                    @foreach($books as $book) @endforeach
                     <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{$books->count()}}
                     </p>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                         @foreach($books as $book)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                {{--  <a href="{{ route('book.show', $book->id) }}" class="text-purple-600 hover:underline">  --}}
+                                <a href="{{ route('book.show', $book->id) }}" class="text-purple-600 hover:underline">
                                     <div class="flex items-center text-sm">
                                         <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
                                             <img class="object-cover w-full h-full rounded-full" src="assets/img/book (1).png" alt="" loading="lazy" />

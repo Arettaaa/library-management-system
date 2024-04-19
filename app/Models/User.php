@@ -26,6 +26,11 @@ class User extends Authenticatable
         'email',
     ];
 
+    public function borrows()
+    {
+        return $this->belongsToMany(Borrow::class, 'bool_id', 'user_id', 'id');
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

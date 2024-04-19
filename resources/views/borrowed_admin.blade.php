@@ -27,13 +27,18 @@
             <span>Book List</span>
         </h4>
 
-        <div class="flex justify-between">
-            <button class="px-4 py-2 mb-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                <a href="{{ route('user.export') }}" class="text-white">Export PDF</a>
-            </button>
-        </div>
 
 
+        <h4 class="mb-4 text-lg font-semibold flex justify-between items-center text-gray-600 dark:text-gray-300">
+            <span>Borrow List</span>
+             <div class="flex justify-between">
+                <div class="flex justify-between">
+                    <button class="px-4 py-2 mb-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+                        <a href="{{ route('user.export') }}" class="text-white">Export PDF</a>
+                    </button>
+                </div>
+            </div>
+        </h4>
 
         <div class="w-full overflow-hidden rounded-lg shadow-xs">
             <div class="w-full overflow-x-auto">
@@ -52,8 +57,9 @@
                         @foreach($books as $borrow)
                         <tr class="text-gray-700 dark:text-gray-400">
                             <td class="px-4 py-3">
-                                <div class="font-semibold">{{ $borrow->user->name }}</div>
-                                <div class="text-xs text-gray-600 dark:text-gray-400">{{ $borrow->user->username }}</div>
+                                <div class="font-semibold"> {{ optional($borrow->user)->name }}
+                                </div>
+                                <div class="text-xs text-gray-600 dark:text-gray-400">{{ optional($borrow->user)->username }}</div>
                             </td>
                             <td class="px-4 py-3 text-sm">
                                 {{--  <a href="{{ route('book.show', $borrow->book->id) }}" class="text-purple-600 hover:underline">  --}}
@@ -68,7 +74,7 @@
                             </td>
                             <td class="px-4 py-3 text-sm text-center">
                                 <div class="flex items-center space-x-4 text-sm">
-                                    <form action="" method="POST">
+                                    <form action="{{ route('return.book', $borrow->id) }}" method="POST">
                                         @csrf
                                         <div class="flex items-center justify-center h-full mt-4">
                                             <button type="submit" class="flex items-center px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple mr-2">

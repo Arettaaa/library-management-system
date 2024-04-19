@@ -5,6 +5,7 @@ use App\Models\Book;
 use App\Models\Borrow;
 use App\Models\Category;
 use App\Models\Collection;
+use App\Models\Review;
 use App\Models\User;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
@@ -373,6 +374,28 @@ class PerpusController extends Controller
             ->get();
 
         return view('borrowed_admin', compact('books'));
+    }
+
+    public function simpanReview(Request $request)
+    {
+        $request->validate([
+            'book_id' => 'required|exists:books,id',
+            'rating' => 'required|numeric|min:1|max:5',
+            'review' => 'required|string|max:255',
+        ]);
+
+        Review::updateOrCreate(
+            [
+                'book_id' => $request->book_id,
+                'user_id' => Auth::id(),
+            ],
+            [
+                'rating' => $request->rating,
+                'review' => $request->review,
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Review saved successfully!');
     }
 
     public function error()
