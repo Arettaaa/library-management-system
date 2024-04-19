@@ -484,8 +484,8 @@ class PerpusController extends Controller
             ->orWhere('pubyear', 'like', "%$cari%")
             ->get();
 
-        return view('bookex', compact('books', 'cari'));
-    }
+            return view('search', compact('books', 'cari'));
+        }
 
     public function cariBooks(Request $request)
     {
@@ -503,24 +503,32 @@ class PerpusController extends Controller
         return view('dashboarduser', compact('books', 'cari'));
     }
 
-    public function exportBooks(Request $request)
+    public function search(Request $request)
     {
-        $cari = $request->input('cari');
 
-        $books = Book::query()
-            ->where(function ($query) use ($cari) {
-                $query->where('title', 'like', "%$cari%")
-                    ->orWhere('writer', 'like', "%$cari%")
-                    ->orWhere('publisher', 'like', "%$cari%")
-                    ->orWhere('pubyear', 'like', "%$cari%");
-            })
-            ->whereHas('category', function ($query) use ($cari) {
-                $query->where('name', 'like', "%$cari%");
-            })
-            ->get();
-
-        return Excel::download(new BooksExport($books), 'books.xlsx');
+        $categories = Category::all();
+        $books = Book::all();
+        return view('search', compact('categories', 'books'));    
     }
+
+        public function exportBooks(Request $request)
+        {
+            $cari = $request->input('cari');
+        
+            $books = Book::where(function ($query) use ($cari) {
+                    $query->where('title', 'like', "%$cari%")
+                          ->orWhere('writer', 'like', "%$cari%")
+                          ->orWhere('publisher', 'like', "%$cari%")
+                          ->orWhere('pubyear', 'like', "%$cari%");
+                })
+                ->orWhereHas('category', function ($query) use ($cari) {
+                    $query->where('name', 'like', "%$cari%");
+                })
+                ->get();
+        
+            return Excel::download(new BooksExport($books), 'books.xlsx');
+        }
+        
 
     public function exportCategories()
     {

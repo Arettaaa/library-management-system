@@ -69,6 +69,7 @@ Route::middleware('isLogin', 'CekRole:admin')->group(function () {
     Route::get('/borrowed', [PerpusController::class, 'borrowed'])->name('borrowed');
 // });
 
+Route::get('/search', [PerpusController::class, 'search'])->name('search');
 
 
 Route::get('/error', [PerpusController::class, 'error'])->name('error');

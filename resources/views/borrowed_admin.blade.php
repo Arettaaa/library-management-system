@@ -58,8 +58,15 @@
                                 {{ $borrow->book->title }}
                             </td>
                             <td class="px-4 py-3">{{ $borrow->tanggal_peminjaman }}</td>
-                            <td class="px-4 py-3">{{ $borrow->tanggal_pengembalian }}</td>
-                            <td class="px-4 py-3 text-xs">
+                            <td class="px-4 py-3">
+                                @if($borrow->status == 'borrowed')
+                                    <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
+                                        Buku masih dipinjam
+                                    </span>
+                                @else
+                                    {{ $borrow->tanggal_pengembalian }}
+                                @endif
+                            </td>                            <td class="px-4 py-3 text-xs">
                                 <span class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">
                                     {{ $borrow->status }}
                                 </span>
