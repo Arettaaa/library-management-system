@@ -177,7 +177,7 @@ class PerpusController extends Controller
             'stock' => $request->stock,
         ]);
 
-        return redirect('/book')->with('success', 'berhasil membuat akun!');
+        return redirect('/bookex')->with('success', 'berhasil membuat akun!');
     }
 
     public function borrowBook($bookId)
